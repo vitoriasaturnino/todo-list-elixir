@@ -1,0 +1,68 @@
+<h1>Listing Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Text</th>
+      <th>Person</th>
+      <th>Status</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for item <- @items do %>
+    <tr>
+      <td><%= item.text %></td>
+      <td><%= item.person_id %></td>
+      <td><%= item.status %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.item_path(@conn, :show, item) %></span>
+        <span><%= link "Edit", to: Routes.item_path(@conn, :edit, item) %></span>
+        <span><%= link "Delete", to: Routes.item_path(@conn, :delete, item), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Item", to: Routes.item_path(@conn, :new) %></span>
+
+<section class="todoapp">
+  <header class="header">
+    <h1>todos</h1>
+    <%= render "form.html", Map.put(assigns, :action, Routes.item_path(@conn, :create)) %>
+  </header>
+  <section class="main" style="display: block;">
+  <input id="toggle-all" class="toggle-all" type="checkbox">
+  <label for="toggle-all">Mark all as complete</label>
+    <ul class="todo-list">
+      <%= for item <- @items do %>
+        <li data-id="<%= item.id %>" class="<%= complete(item) %>">
+          <div class="view">
+            <input <%= checked(item) %> class="toggle" type="checkbox">
+            <label><%= item.text %></label>
+            <%= link "", class: "destroy",
+              to: Routes.item_path(@conn, :delete, item), method: :delete,
+              data: [confirm: "Are you sure?"] %>
+          </div>
+        </li>
+      <% end %>
+  </section>
+  <footer class="footer" style="display: block;">
+    <span class="todo-count"><%= remaining_items(@items) %> items left</span>
+    <ul class="filters">
+      <li>
+        <a href="#/" class="selected">All</a>
+      </li>
+      <li>
+        <a href="#/active">Active</a>
+      </li>
+      <li>
+        <a href="#/completed">Completed</a>
+      </li>
+    </ul>
+    <button class="clear-completed" style="display: none;"></button>
+  </footer>
+</section>
